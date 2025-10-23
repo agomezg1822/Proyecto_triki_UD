@@ -1,34 +1,119 @@
-<!-- static/index.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Triki Multiplataforma</title>
+  <meta charset="utf-8">
+  <title>Triki Multijugador</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script defer src="script.js"></script>
 </head>
-<body class="bg-gray-100 text-gray-900">
-  <nav class="bg-blue-600 text-white p-4 flex justify-between">
-    <h1 class="font-bold">🎮 Triki Multiplataforma</h1>
-    <div>
-      <button id="btnHome" class="mx-2 hover:underline">🏠 Home</button>
-      <button id="btnStats" class="mx-2 hover:underline">📊 Estadísticas</button>
-      <button id="btnHist" class="mx-2 hover:underline">🕒 Histórico</button>
-    </div>
-  </nav>
+<body class="bg-gray-100 flex flex-col items-center justify-center h-screen">
 
-  <main class="p-8">
-    <h2 class="text-xl font-semibold mb-4">Crear o unirse a una partida</h2>
+  <h1 class="text-4xl font-bold mb-6">🎮 Triki Multijugador</h1>
 
-    <div class="mb-4">
-      <button id="crearPartida" class="bg-green-500 text-white px-4 py-2 rounded">Crear partida</button>
+ 
+
+    <div class="mb-3">
+      <label class="block font-semibold mb-1">ID de Partida:</label>
+      <input id="partidaId" type="text" class="border border-gray-300 rounded w-full p-2" placeholder="Ej: 9a8b7c2d">
     </div>
 
-    
+    <div class="flex justify-between mt-4">
+      <button id="createBtn" class="bg-blue-600 text-white px-3 py-2 rounded ">Crear</button>
+    </div>
 
-    <div id="info" class="text-gray-700 mb-4"></div>
+    <div class="mt-5">
+      <button onclick="window.location.href='/estadisticas'" class="bg-yellow-500 text-white px-3 py-2 rounded w-full mb-2">📊 Ver Estadísticas</button>
+      <button onclick="window.location.href='/historico'" class="bg-purple-600 text-white px-3 py-2 rounded w-full">📜 Ver Histórico</button>
+    </div>
+  </div>
 
-    
-  </main>
+  <div id="juego" class="hidden text-center">
+    <h2 id="tituloPartida" class="text-2xl font-semibold mb-4"></h2>
+    <div id="tablero" class="grid grid-cols-3 gap-2 w-64 mx-auto mb-4"></div>
+    <p id="turno" class="text-lg mb-3"></p>
+    <button id="volverBtn" class="bg-gray-700 text-white px-4 py-2 rounded">🔙 Volver</button>
+  </div>
+
+  <script>
+    const menu = document.getElementById('menu');
+    const juego = document.getElementById('juego');
+    const tableroDiv = document.getElementById('tablero');
+    const turnoDiv = document.getElementById('turno');
+    const tituloPartida = document.getElementById('tituloPartida');
+
+    let ws = null;
+    let symbol = null;
+    let currentPlayer = null;
+    let partidaId = null;
+
+    document.getElementById('createBtn').onclick = async () => {
+      const res = await fetch('/api/create_partida', {method: 'POST'});
+      const data = await res.json();
+      document.getElementById('partidaId').value = data.partida_id;
+      alert(`✅ Partida creada con ID: ${data.partida_id}`);
+    };
+
+    document.getElementById('joinBtn').onclick = () => {
+      const name = document.getElementById('name').value.trim();
+      partidaId = document.getElementById('partidaId').value.trim();
+
+      if (!name || !partidaId) {
+        alert('⚠️ Ingresa nombre e ID de partida');
+        return;
+      }
+
+      menu.classList.add('hidden');
+      juego.classList.remove('hidden');
+      tituloPartida.textContent = `ID: ${partidaId}`;
+
+      ws = new WebSocket(`ws://${location.host}/ws/${partidaId}`);
+
+      ws.onopen = () => {
+        ws.send(JSON.stringify({action: "join", name}));
+      };
+
+      ws.onmessage = (e) => {
+        const msg = JSON.parse(e.data);
+        if (msg.type === "info") {
+          if (msg.symbol) symbol = msg.symbol;
+          turnoDiv.textContent = msg.message;
+        }
+        if (msg.type === "state") {
+          renderBoard(msg.board, msg.current_player, msg.winner);
+        }
+        if (msg.type === "error") alert(msg.message);
+      };
+
+      ws.onclose = () => {
+        turnoDiv.textContent = "❌ Conexión cerrada";
+      };
+    };
+
+    function renderBoard(board, current, winner) {
+      tableroDiv.innerHTML = '';
+      currentPlayer = current;
+      board.forEach((cell, i) => {
+        const btn = document.createElement('button');
+        btn.textContent = cell || '';
+        btn.className = "w-20 h-20 text-3xl border border-gray-400 bg-white rounded hover:bg-gray-200";
+        btn.onclick = () => makeMove(i);
+        tableroDiv.appendChild(btn);
+      });
+      if (winner) {
+        turnoDiv.textContent = winner.includes('Empate') ? "🤝 Empate!" : `🏁 ${winner}`;
+      } else {
+        turnoDiv.textContent = (symbol === current) ? "Tu turno!" : "Esperando rival...";
+      }
+    }
+
+    function makeMove(pos) {
+      if (ws && currentPlayer === symbol) {
+        ws.send(JSON.stringify({action: "move", position: pos}));
+      }
+    }
+
+    document.getElementById('volverBtn').onclick = () => {
+      location.reload();
+    };
+  </script>
 </body>
 </html>

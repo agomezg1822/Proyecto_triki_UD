@@ -3,16 +3,7 @@ let ws = null;
 const tablero = document.getElementById("tablero");
 const info = document.getElementById("info");
 
-// Crear 9 botones para el tablero
-for (let i = 0; i < 9; i++) {
-  const cell = document.createElement("button");
-  cell.className = "bg-white border text-2xl font-bold h-16 w-16";
-  cell.dataset.pos = i;
-  cell.addEventListener("click", () => {
-    if (ws) ws.send(JSON.stringify({ action: "move", position: i }));
-  });
-  tablero.appendChild(cell);
-}
+
 
 // Crear partida
 document.getElementById("crearPartida").onclick = async () => {

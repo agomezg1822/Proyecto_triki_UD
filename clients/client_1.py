@@ -9,8 +9,8 @@ SERVER_URL = "ws://127.0.0.1:8000/ws"
 class TrikiApp(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.title("Triki Multijugador 🎮")
-        self.geometry("420x550")
+        self.title("Triki Multijugador 🎮 Jugador 1")
+        self.geometry("420x600")
 
         # ---- Interfaz inicial ----
         self.label = ctk.CTkLabel(self, text="Conectar a Partida", font=("Arial", 18))
@@ -25,7 +25,7 @@ class TrikiApp(ctk.CTk):
         self.btn_conectar = ctk.CTkButton(self, text="Conectar", command=self.connect_to_server)
         self.btn_conectar.pack(pady=10)
 
-        # ---- Panel del tablero ----
+        # ---- Tablero ----
         self.board_frame = ctk.CTkFrame(self)
         self.cells = []
         for i in range(3):
@@ -40,10 +40,14 @@ class TrikiApp(ctk.CTk):
         self.status_label = ctk.CTkLabel(self, text="", font=("Arial", 16))
         self.status_label.pack(pady=10)
 
+        self.btn_reiniciar = ctk.CTkButton(self, text="🔄 Reiniciar", command=self.reiniciar_tablero, state="disabled")
+        self.btn_reiniciar.pack(pady=5)
+
         self.symbol = None
         self.partida_id = None
         self.websocket = None
         self.loop = None
+        self.my_turn = False
 
     def connect_to_server(self):
         self.partida_id = self.entry_partida.get().strip()
@@ -66,10 +70,8 @@ class TrikiApp(ctk.CTk):
         try:
             async with websockets.connect(f"{SERVER_URL}/{self.partida_id}") as ws:
                 self.websocket = ws
-                # Enviar mensaje de join
                 await ws.send(json.dumps({"action": "join", "name": self.nombre}))
 
-                # Recibir mensajes del servidor
                 async for msg in ws:
                     data = json.loads(msg)
                     self.handle_message(data)
@@ -78,16 +80,31 @@ class TrikiApp(ctk.CTk):
 
     def handle_message(self, data):
         tipo = data.get("type")
+
         if tipo == "info":
-            msg = data.get("message", "")
             self.symbol = data.get("symbol", self.symbol)
+            msg = data.get("message", "")
             self.status_label.configure(text=msg)
-        elif tipo in ("state", "move_result"):
-            board = data.get("board", [])
-            self.update_board(board)
+
+        elif tipo == "state":
+            self.update_board(data.get("board", []))
+            self.my_turn = data.get("turn") == self.symbol
+            self.status_label.configure(
+                text=f" Tu turno ({self.symbol})" if self.my_turn else f"⏳ Esperando al otro jugador..."
+            )
+
+        elif tipo == "move_result":
+            self.update_board(data.get("board", []))
             winner = data.get("winner")
+            self.my_turn = data.get("turn") == self.symbol
             if winner:
-                self.status_label.configure(text=f"🎉 {winner}")
+                self.status_label.configure(text=f" Ganador: {winner}")
+                self.btn_reiniciar.configure(state="normal")
+            else:
+                self.status_label.configure(
+                    text=f" Tu turno ({self.symbol})" if self.my_turn else f"⏳ Esperando al otro jugador..."
+                )
+
         elif tipo == "error":
             self.status_label.configure(text=f"⚠️ {data.get('message')}")
 
@@ -100,11 +117,27 @@ class TrikiApp(ctk.CTk):
     def play_move(self, i, j):
         if not self.websocket or not self.symbol:
             return
+        if not self.my_turn:
+            self.status_label.configure(text="⚠️ No es tu turno.")
+            return
         pos = i * 3 + j
         asyncio.run_coroutine_threadsafe(
             self.websocket.send(json.dumps({"action": "move", "position": pos})),
             self.loop
         )
+
+    def reiniciar_tablero(self):
+        for i in range(3):
+            for j in range(3):
+                self.cells[i][j].configure(text="")
+        self.status_label.configure(text="🔄 Reiniciando...")
+        self.btn_reiniciar.configure(state="disabled")
+
+        if self.websocket:
+            asyncio.run_coroutine_threadsafe(
+                self.websocket.send(json.dumps({"action": "reset"})),
+                self.loop
+            )
 
 if __name__ == "__main__":
     ctk.set_appearance_mode("dark")
