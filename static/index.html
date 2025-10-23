@@ -1,9 +1,34 @@
 <!-- static/index.html -->
-<!doctype html>
-<html>
-  <head><meta charset="utf-8"><title>Triki - Web</title></head>
-  <body>
-    <h1>Triki Multiplataforma - Web (placeholder)</h1>
-    <p>En construcción: Home, Estadísticas e Histórico.</p>
-  </body>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Triki Multiplataforma</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="script.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+  <nav class="bg-blue-600 text-white p-4 flex justify-between">
+    <h1 class="font-bold">🎮 Triki Multiplataforma</h1>
+    <div>
+      <button id="btnHome" class="mx-2 hover:underline">🏠 Home</button>
+      <button id="btnStats" class="mx-2 hover:underline">📊 Estadísticas</button>
+      <button id="btnHist" class="mx-2 hover:underline">🕒 Histórico</button>
+    </div>
+  </nav>
+
+  <main class="p-8">
+    <h2 class="text-xl font-semibold mb-4">Crear o unirse a una partida</h2>
+
+    <div class="mb-4">
+      <button id="crearPartida" class="bg-green-500 text-white px-4 py-2 rounded">Crear partida</button>
+    </div>
+
+    
+
+    <div id="info" class="text-gray-700 mb-4"></div>
+
+    
+  </main>
+</body>
 </html>
