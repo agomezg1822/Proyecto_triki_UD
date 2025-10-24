@@ -1,47 +1,80 @@
-// static/script.js
-let ws = null;
-const tablero = document.getElementById("tablero");
-const info = document.getElementById("info");
+const menu = document.getElementById('menu');
+    const juego = document.getElementById('juego');
+    const tableroDiv = document.getElementById('tablero');
+    const turnoDiv = document.getElementById('turno');
+    const tituloPartida = document.getElementById('tituloPartida');
 
+    let ws = null;
+    let symbol = null;
+    let currentPlayer = null;
+    let partidaId = null;
 
+    document.getElementById('createBtn').onclick = async () => {
+      const res = await fetch('/api/create_partida', {method: 'POST'});
+      const data = await res.json();
+      document.getElementById('partidaId').value = data.partida_id;
+      alert(`✅ Partida creada con ID: ${data.partida_id}`);
+    };
 
-// Crear partida
-document.getElementById("crearPartida").onclick = async () => {
-  const res = await fetch("/api/create_partida", { method: "POST" });
-  const data = await res.json();
-  info.innerText = `ID de partida: ${data.partida_id}`;
-};
+    document.getElementById('joinBtn').onclick = () => {
+      const name = document.getElementById('name').value.trim();
+      partidaId = document.getElementById('partidaId').value.trim();
 
-// Conectar al WS
-document.getElementById("conectar").onclick = async () => {
-  const id = document.getElementById("inputPartida").value.trim();
-  const name = document.getElementById("inputName").value.trim();
-  if (!id || !name) {
-    info.innerText = "Debes ingresar un ID y un nombre.";
-    return;
-  }
+      if (!name || !partidaId) {
+        alert('⚠️ Ingresa nombre e ID de partida');
+        return;
+      }
 
-  ws = new WebSocket(`ws://127.0.0.1:8000/ws/${id}`);
-  ws.onopen = () => {
-    ws.send(JSON.stringify({ action: "join", name }));
-    info.innerText = "Conectado al servidor...";
-  };
+      menu.classList.add('hidden');
+      juego.classList.remove('hidden');
+      tituloPartida.textContent = `ID: ${partidaId}`;
 
-  ws.onmessage = (event) => {
-    const msg = JSON.parse(event.data);
-    if (msg.type === "state" || msg.type === "move_result") {
-      updateBoard(msg.board);
-      if (msg.winner) info.innerText = msg.winner;
-      else info.innerText = `Turno de ${msg.current_player}`;
-    } else if (msg.type === "info") {
-      info.innerText = msg.message;
-    } else if (msg.type === "error") {
-      info.innerText = "⚠️ " + msg.message;
+      ws = new WebSocket(`ws://${location.host}/ws/${partidaId}`);
+
+      ws.onopen = () => {
+        ws.send(JSON.stringify({action: "join", name}));
+      };
+
+      ws.onmessage = (e) => {
+        const msg = JSON.parse(e.data);
+        if (msg.type === "info") {
+          if (msg.symbol) symbol = msg.symbol;
+          turnoDiv.textContent = msg.message;
+        }
+        if (msg.type === "state") {
+          renderBoard(msg.board, msg.current_player, msg.winner);
+        }
+        if (msg.type === "error") alert(msg.message);
+      };
+
+      ws.onclose = () => {
+        turnoDiv.textContent = "❌ Conexión cerrada";
+      };
+    };
+
+    function renderBoard(board, current, winner) {
+      tableroDiv.innerHTML = '';
+      currentPlayer = current;
+      board.forEach((cell, i) => {
+        const btn = document.createElement('button');
+        btn.textContent = cell || '';
+        btn.className = "w-20 h-20 text-3xl border border-gray-400 bg-white rounded hover:bg-gray-200";
+        btn.onclick = () => makeMove(i);
+        tableroDiv.appendChild(btn);
+      });
+      if (winner) {
+        turnoDiv.textContent = winner.includes('Empate') ? "🤝 Empate!" : `🏁 ${winner}`;
+      } else {
+        turnoDiv.textContent = (symbol === current) ? "Tu turno!" : "Esperando rival...";
+      }
     }
-  };
-};
 
-function updateBoard(board) {
-  const cells = tablero.querySelectorAll("button");
-  board.forEach((val, i) => (cells[i].innerText = val || ""));
-}
+    function makeMove(pos) {
+      if (ws && currentPlayer === symbol) {
+        ws.send(JSON.stringify({action: "move", position: pos}));
+      }
+    }
+
+    document.getElementById('volverBtn').onclick = () => {
+      location.reload();
+    };

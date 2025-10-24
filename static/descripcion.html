@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Descripción del Proyecto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" type="image/png" href="/static/imagenes/personal.png">
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans">
+  <header class="bg-gray-800 shadow-lg">
+    <nav class="max-w-5xl mx-auto flex justify-between items-center p-4">
+      <h1 class="text-2xl font-bold text-blue-400"><a href="/static/index.html">Triki Multijugador</a></h1>
+      <div class="space-x-6">
+        <a href="/static/index.html" class="hover:text-blue-400">Inicio</a>
+        <a href="/static/estadisticas.html" class="hover:text-blue-400">Estadísticas</a>
+        <a href="/static/historico.html" class="hover:text-blue-400">Histórico</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="max-w-4xl mx-auto py-16 px-6">
+    <section class="mb-12 text-center">
+      <h2 class="text-3xl font-semibold mb-4">🎮 Proyecto Triki Multijugador</h2>
+      <p class="text-gray-300 leading-relaxed">
+        Este proyecto fue desarrollado como parte de la materia <span class="font-semibold text-blue-300">Desarrollo de Aplicaciones Multiplataforma</span>.  
+        El objetivo es demostrar la comunicación en tiempo real entre dos clientes (usando <span class="text-blue-400">CustomTkinter</span>)
+        conectados mediante un servidor <span class="text-blue-400">FastAPI + WebSockets</span>.
+      </p>
+    </section>
+
+    <section class="mb-12">
+      <h3 class="text-2xl font-semibold mb-3">🧠 Tecnologías utilizadas</h3>
+      <ul class="list-disc pl-6 text-gray-300 space-y-1">
+        <li>Python con FastAPI para el backend y WebSockets.</li>
+        <li>CustomTkinter para la interfaz gráfica de los jugadores.</li>
+        <li>SQLite y SQLAlchemy para la gestión de estadísticas y partidas.</li>
+        <li>HTML, Tailwind CSS y JavaScript para la interfaz web.</li>
+      </ul>
+    </section>
+
+    <section class="mb-12">
+      <h3 class="text-2xl font-semibold mb-3">👥 Descripción del funcionamiento</h3>
+      <p class="text-gray-300 leading-relaxed">
+        Dos jugadores pueden unirse a una misma partida ingresando un <span class="text-blue-400 font-semibold">ID de partida</span>.
+        Cada movimiento se refleja en tiempo real en ambas pantallas mediante WebSockets.
+        Al finalizar, el resultado se almacena en la base de datos, y las estadísticas globales pueden verse en la interfaz web.
+      </p>
+    </section>
+
+    <section class="text-center">
+      <h2 class="text-2xl font-semibold mb-3">Descripcion:</h2>
+      <div class="bg-gray-800 p-6 rounded-xl shadow-md inline-block">
+        <p class="text-lg font-semibold text-blue-400 mb-1">Andres Felipe Gomez Guevara </p>
+        <p class="text-gray-300 mb-2">Estudiante de Ingeniería en Control y Automatizacion</p>
+        <p class="text-gray-400 italic">Universidad Distrital Francisco Jose de Caldas — 2025</p>
+      </div>
+    </section>
+  </main>
+  <footer class="bg-gray-800 text-center py-4 mt-12 text-gray-500 text-sm">
+    2025 - Proyecto Triki Multiplataforma - Desarrollado por Andres Felipe Gomez G. 
+    <a href="https://co.linkedin.com/in/andres-felipe-gomez-guevara" 
+             class="inline-flex items-center ml-2 text-blue-700 hover:text-blue-400 transition-colors">
+            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+            </svg>
+            LinkedIn
+          </a>
+</body>
+</html>

@@ -92,11 +92,15 @@ def redirect_estadisticas():
     """Redirige al archivo HTML de estadísticas dentro de /static"""
     return RedirectResponse(url="/static/estadisticas.html")
 
+@app.get("/descripcion")
+def redirect_desarollo():
+    """Redirige al archivo HTML de desarollo dentro de /static"""
+    return RedirectResponse(url="/static/descripcion.html")
 
 @app.get("/historico", response_class=HTMLResponse)
 def ver_historico():
-    with open("static/historico.html", "r", encoding="utf-8") as f:
-        return HTMLResponse(f.read())
+    """Redirige al archivo HTML de historico dentro de /static"""
+    return RedirectResponse(url="/static/historico.html")
 
 # ======================
 #   API JSON

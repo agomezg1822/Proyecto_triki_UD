@@ -4,7 +4,19 @@
     <meta charset="UTF-8">
     <title>Estadísticas de Jugadores</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/static/imagenes/beneficios.png">
 </head>
+
+<header class="bg-gray-800 shadow-lg">
+    <nav class="max-w-5xl mx-auto flex justify-between items-center p-4">
+      <h1 class="text-2xl font-bold text-blue-400"><a href="/static/index.html">Triki Multijugador</a></h1>
+      <div class="space-x-6">
+        <a href="/static/index.html" class="hover:text-blue-400">Inicio</a>
+        <a href="/static/descripcion.html" class="hover:text-blue-400">Desarollo</a>
+        <a href="/static/historico.html" class="hover:text-blue-400">Histórico</a>
+      </div>
+    </nav>
+  </header>
 <body class="bg-gray-900 text-white">
     <div class="container mx-auto p-6">
         <h1 class="text-3xl font-bold mb-4 text-center">🏆 Estadísticas de Jugadores</h1>
@@ -23,32 +35,21 @@
             </table>
         </div>
         <div class="text-center mt-6">
-            <a href="/" class="text-blue-400 hover:underline">⬅ Volver al inicio</a>
+            <a href="/" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg">⬅ Volver al inicio</a>
         </div>
     </div>
 
-    <script>
-        async function cargarEstadisticas() {
-            const res = await fetch('/api/estadisticas');
-            const jugadores = await res.json();
-            const tbody = document.getElementById('tabla-body');
-            tbody.innerHTML = "";
+    <footer class="bg-gray-800 text-center py-4 mt-12 text-gray-500 text-sm">
+    2025 - Proyecto Triki Multiplataforma - Desarrollado por Andres Felipe Gomez G. 
+    <a href="https://co.linkedin.com/in/andres-felipe-gomez-guevara" 
+             class="inline-flex items-center ml-2 text-blue-700 hover:text-blue-400 transition-colors">
+            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+            </svg>
+            LinkedIn
+          </a>
+  </footer>
 
-            jugadores.forEach((j, i) => {
-                const fila = `
-                    <tr class="hover:bg-gray-800">
-                        <td class="py-2 px-4">${i + 1}</td>
-                        <td class="py-2 px-4">${j.nombre}</td>
-                        <td class="py-2 px-4">${j.ganadas}</td>
-                        <td class="py-2 px-4">${j.perdidas}</td>
-                        <td class="py-2 px-4">${j.puntaje}</td>
-                    </tr>
-                `;
-                tbody.innerHTML += fila;
-            });
-        }
-
-        cargarEstadisticas();
-    </script>
+    <script src="estadisticas.js"></script>
 </body>
 </html>

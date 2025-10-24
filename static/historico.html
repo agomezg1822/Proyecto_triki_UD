@@ -4,7 +4,18 @@
   <meta charset="UTF-8">
   <title>Histórico de Partidas - Triki</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/static/imagenes/reloj-de-arena.png">
 </head>
+<header class="bg-gray-800 shadow-lg">
+    <nav class="max-w-5xl mx-auto flex justify-between items-center p-4">
+      <h1 class="text-2xl font-bold text-blue-400"><a href="/static/index.html">Triki Multijugador</a></h1>
+      <div class="space-x-6">
+        <a href="/static/index.html" class="hover:text-blue-400">Inicio</a>
+        <a href="/static/estadisticas.html" class="hover:text-blue-400">Estadísticas</a>
+        <a href="/static/descripcion.html" class="hover:text-blue-400">Desarollo</a>
+      </div>
+    </nav>
+  </header>
 <body class="bg-gray-900 text-gray-100">
   <div class="max-w-5xl mx-auto mt-12 p-6 bg-gray-800 rounded-xl shadow-lg">
     <h1 class="text-3xl font-bold mb-6 text-center">🕹️ Histórico de Partidas</h1>
@@ -13,38 +24,20 @@
     <div id="tabla-container" class="overflow-x-auto"></div>
 
     <div class="text-center mt-8">
-      <a href="/" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg">Volver al inicio</a>
+      <a href="/" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg">⬅ Volver al inicio</a>
     </div>
   </div>
 
-  <script>
-    async function cargarTabla() {
-      const res = await fetch('/api/historico');
-      const data = await res.json();
-      let html = `
-        <table class="min-w-full border border-gray-700 text-center">
-          <thead class="bg-gray-700">
-            <tr>
-              <th class="py-3 px-4 border-b border-gray-600">Jugador 1</th>
-              <th class="py-3 px-4 border-b border-gray-600">Jugador 2</th>
-              <th class="py-3 px-4 border-b border-gray-600">Ganador</th>
-              <th class="py-3 px-4 border-b border-gray-600">Fecha</th>
-            </tr>
-          </thead>
-          <tbody>`;
-      for (const p of data) {
-        html += `
-          <tr class="hover:bg-gray-700">
-            <td class="py-2 px-4 border-b border-gray-700">${p.jugador1}</td>
-            <td class="py-2 px-4 border-b border-gray-700">${p.jugador2}</td>
-            <td class="py-2 px-4 border-b border-gray-700">${p.ganador}</td>
-            <td class="py-2 px-4 border-b border-gray-700">${p.fecha}</td>
-          </tr>`;
-      }
-      html += `</tbody></table>`;
-      document.getElementById('tabla-container').innerHTML = html;
-    }
-    cargarTabla();
-  </script>
+  <footer class="bg-gray-800 text-center py-4 mt-12 text-gray-500 text-sm">
+    2025 -  Desarrollado por Andres Felipe Gomez G. 
+    <a href="https://co.linkedin.com/in/andres-felipe-gomez-guevara" 
+             class="inline-flex items-center ml-2 text-blue-700 hover:text-blue-400 transition-colors">
+            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+            </svg>
+            LinkedIn
+          </a>
+
+  <script src="historico.js"></script>
 </body>
 </html>

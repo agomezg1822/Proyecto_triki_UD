@@ -4,116 +4,63 @@
   <meta charset="utf-8">
   <title>Triki Multijugador</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" type="image/png" href="/static/imagenes/memoria.png">
+
 </head>
-<body class="bg-gray-100 flex flex-col items-center justify-center h-screen">
 
-  <h1 class="text-4xl font-bold mb-6">🎮 Triki Multijugador</h1>
+<body class="bg-gradient-to-br from-indigo-50 to-white flex flex-col min-h-screen items-center">
 
- 
-
-    <div class="mb-3">
-      <label class="block font-semibold mb-1">ID de Partida:</label>
-      <input id="partidaId" type="text" class="border border-gray-300 rounded w-full p-2" placeholder="Ej: 9a8b7c2d">
+  <main class="flex flex-col items-center justify-center flex-grow w-full">
+    <h1 class="text-4xl font-bold mb-6 text-indigo-900">🎮 Triki Multijugador</h1>
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+    <div class="mb-4">
+      <label class="block font-semibold mb-2 text-gray-700">ID de Partida:</label>
+      <input id="partidaId" type="text" class="border border-indigo-200 rounded-md w-full p-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="Ej: 9a8b7c2d">
     </div>
 
     <div class="flex justify-between mt-4">
-      <button id="createBtn" class="bg-blue-600 text-white px-3 py-2 rounded ">Crear</button>
+      <button id="createBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md transition-colors duration-200 font-medium">Crear</button>
     </div>
 
-    <div class="mt-5">
-      <button onclick="window.location.href='/estadisticas'" class="bg-yellow-500 text-white px-3 py-2 rounded w-full mb-2">📊 Ver Estadísticas</button>
-      <button onclick="window.location.href='/historico'" class="bg-purple-600 text-white px-3 py-2 rounded w-full">📜 Ver Histórico</button>
+    <div class="mt-6 space-y-3">
+      <button onclick="window.location.href='/descripcion'" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-md w-full transition-colors duration-200 font-medium">Ver Desarrollo</button>
+      <button onclick="window.location.href='/estadisticas'" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2.5 rounded-md w-full transition-colors duration-200 font-medium">📊 Ver Estadísticas</button>
+      <button onclick="window.location.href='/historico'" class="bg-violet-600 hover:bg-violet-700 text-white px-4 py-2.5 rounded-md w-full transition-colors duration-200 font-medium">📜 Ver Histórico</button>
     </div>
   </div>
 
-  <div id="juego" class="hidden text-center">
-    <h2 id="tituloPartida" class="text-2xl font-semibold mb-4"></h2>
-    <div id="tablero" class="grid grid-cols-3 gap-2 w-64 mx-auto mb-4"></div>
-    <p id="turno" class="text-lg mb-3"></p>
-    <button id="volverBtn" class="bg-gray-700 text-white px-4 py-2 rounded">🔙 Volver</button>
+    </div>
+    <div id="juego" class="hidden text-center bg-white p-8 rounded-lg shadow-lg mt-6">
+    <h2 id="tituloPartida" class="text-2xl font-semibold mb-4 text-indigo-900"></h2>
+    <div id="tablero" class="grid grid-cols-3 gap-3 w-72 mx-auto mb-6"></div>
+    <p id="turno" class="text-lg mb-4 text-gray-700"></p>
+    <button id="volverBtn" class="bg-gray-600 hover:bg-gray-700 text-white px-5 py-2 rounded-md transition-colors duration-200 font-medium">🔙 Volver</button>
   </div>
+  </main>
+  <footer class="w-full bg-gradient-to-r from-indigo-900 to-violet-900 text-center py-6 mt-auto">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="flex flex-col items-center space-y-4">
+        <div class="text-white/90">
+          <span class="font-medium">Proyecto Triki Multiplataforma</span>
+          <span class="mx-2">•</span>
+          <span>2025</span>
+        </div>
+        <div class="text-white/80 flex items-center space-x-2">
+          <span>Desarrollado por</span>
+          <span class="font-medium">Andres Felipe Gomez G.</span>
+          <a href="https://co.linkedin.com/in/andres-felipe-gomez-guevara" 
+             class="inline-flex items-center ml-2 text-blue-400 hover:text-blue-700 transition-colors">
+            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+            </svg>
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="/static/script.js"></script>
 
-  <script>
-    const menu = document.getElementById('menu');
-    const juego = document.getElementById('juego');
-    const tableroDiv = document.getElementById('tablero');
-    const turnoDiv = document.getElementById('turno');
-    const tituloPartida = document.getElementById('tituloPartida');
-
-    let ws = null;
-    let symbol = null;
-    let currentPlayer = null;
-    let partidaId = null;
-
-    document.getElementById('createBtn').onclick = async () => {
-      const res = await fetch('/api/create_partida', {method: 'POST'});
-      const data = await res.json();
-      document.getElementById('partidaId').value = data.partida_id;
-      alert(`✅ Partida creada con ID: ${data.partida_id}`);
-    };
-
-    document.getElementById('joinBtn').onclick = () => {
-      const name = document.getElementById('name').value.trim();
-      partidaId = document.getElementById('partidaId').value.trim();
-
-      if (!name || !partidaId) {
-        alert('⚠️ Ingresa nombre e ID de partida');
-        return;
-      }
-
-      menu.classList.add('hidden');
-      juego.classList.remove('hidden');
-      tituloPartida.textContent = `ID: ${partidaId}`;
-
-      ws = new WebSocket(`ws://${location.host}/ws/${partidaId}`);
-
-      ws.onopen = () => {
-        ws.send(JSON.stringify({action: "join", name}));
-      };
-
-      ws.onmessage = (e) => {
-        const msg = JSON.parse(e.data);
-        if (msg.type === "info") {
-          if (msg.symbol) symbol = msg.symbol;
-          turnoDiv.textContent = msg.message;
-        }
-        if (msg.type === "state") {
-          renderBoard(msg.board, msg.current_player, msg.winner);
-        }
-        if (msg.type === "error") alert(msg.message);
-      };
-
-      ws.onclose = () => {
-        turnoDiv.textContent = "❌ Conexión cerrada";
-      };
-    };
-
-    function renderBoard(board, current, winner) {
-      tableroDiv.innerHTML = '';
-      currentPlayer = current;
-      board.forEach((cell, i) => {
-        const btn = document.createElement('button');
-        btn.textContent = cell || '';
-        btn.className = "w-20 h-20 text-3xl border border-gray-400 bg-white rounded hover:bg-gray-200";
-        btn.onclick = () => makeMove(i);
-        tableroDiv.appendChild(btn);
-      });
-      if (winner) {
-        turnoDiv.textContent = winner.includes('Empate') ? "🤝 Empate!" : `🏁 ${winner}`;
-      } else {
-        turnoDiv.textContent = (symbol === current) ? "Tu turno!" : "Esperando rival...";
-      }
-    }
-
-    function makeMove(pos) {
-      if (ws && currentPlayer === symbol) {
-        ws.send(JSON.stringify({action: "move", position: pos}));
-      }
-    }
-
-    document.getElementById('volverBtn').onclick = () => {
-      location.reload();
-    };
-  </script>
 </body>
+
 </html>
